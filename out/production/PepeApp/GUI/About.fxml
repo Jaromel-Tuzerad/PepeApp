@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="320.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller">
+   <children>
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="91.0" layoutY="65.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../tomislav.jpg" />
+         </image>
+      </ImageView>
+      <TextArea layoutX="11.0" layoutY="14.0" prefHeight="34.0" prefWidth="360.0" promptText="Tom je prostě špatnej ani se mu to nezobrazilo, tady je jeho fotka" text="Tom je prostě špatnej ani se mu to nezobrazilo, tady je jeho fotka" />
+      <Button alignment="CENTER" layoutX="171.0" layoutY="248.0" mnemonicParsing="false" onAction="#exit" text="Ok..." />
+   </children>
+</AnchorPane>

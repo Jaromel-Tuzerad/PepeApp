@@ -3,20 +3,21 @@ package GUI;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
@@ -39,6 +40,8 @@ public class Controller implements Initializable {
     private RadioButton radioButtonModifiedImage;
     @FXML
     private Menu menuFilters;
+    @FXML
+    private ImageView miniPicture;
 
     final FileChooser fileChooser = new FileChooser();
 
@@ -53,8 +56,8 @@ public class Controller implements Initializable {
         buttonRestoreOriginalImage.setDisable(false);
         radioButtonOriginalImage.setDisable(false);
         radioButtonModifiedImage.setDisable(false);
-        for (int i = 0 ;i < menuFilters.getItemCount(); i++) {
-            menuFilters.getItem(i).setEnabled(true);
+        for (MenuItem item : menuFilters.getItems()) {
+            item.setDisable(false);
         }
     }
 
@@ -64,8 +67,8 @@ public class Controller implements Initializable {
         buttonRestoreOriginalImage.setDisable(true);
         radioButtonOriginalImage.setDisable(true);
         radioButtonModifiedImage.setDisable(true);
-        for (int i = 0 ;i < menuFilters.getItemCount(); i++) {
-            menuFilters.getItem(i).setEnabled(false);
+        for (MenuItem item : menuFilters.getItems()) {
+            item.setDisable(true);
         }
     }
 
@@ -78,6 +81,7 @@ public class Controller implements Initializable {
         File file = fileChooser.showOpenDialog(new Stage());
         Image image = new Image(new FileInputStream(file));
         picture.setImage(image);
+        miniPicture.setImage(image);
         enableButtons();
     }
 
@@ -98,21 +102,55 @@ public class Controller implements Initializable {
         }
     }
 
-    /*@FXML
+    @FXML
     private void generateImage() {
-        BufferedImage img = makeColoredImage();
-        printIntoLog("Image generated");
-        for (int a = 0; a < menuFilters.getItemCount(); a++) {
-            menuFilters.getItem(a).setEnabled(true);
-        }
-        ;
-    }*/
+        BufferedImage bi = makeColoredImage();
+        Image pic = SwingFXUtils.toFXImage(bi, null );
+        picture.setImage(pic);
+        miniPicture.setImage(pic);
+    }
+
+    public int randomInt(int min, int max) {
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
+    }
 
     public BufferedImage makeColoredImage() {
-        BufferedImage bImage = new BufferedImage(600, 600, BufferedImage.TYPE_3BYTE_BGR);
-        for (int x = 0; x < bImage.getWidth(); x++){
+        BufferedImage bImage = new BufferedImage(1536, 1000, BufferedImage.TYPE_3BYTE_BGR);
+        //RED
+        for (int x = 0; x < 256; x++){
             for (int y = 0; y < bImage.getHeight(); y++){
-                bImage.setRGB(x, y, (new Color(x%255,y%255,(x+y)%255).getRGB()));
+                bImage.setRGB(x, y, (new Color(x%256, 0 , 0).getRGB()));
+            }
+        }
+        //RED-GREEN
+        for (int x = 256; x < 512; x++){
+            for (int y = 0; y < bImage.getHeight(); y++){
+                bImage.setRGB(x, y, (new Color(255, x%256, 0).getRGB()));
+            }
+        }
+        //GREEN-RED
+        for (int x = 512; x < 768; x++){
+            for (int y = 0; y < bImage.getHeight(); y++){
+                bImage.setRGB(x, y, (new Color(255-(x%256), 255 ,0).getRGB()));
+            }
+        }
+        //GREEN-BLUE
+        for (int x = 768; x < 1024; x++){
+            for (int y = 0; y < bImage.getHeight(); y++){
+                bImage.setRGB(x, y, (new Color(0, 255 ,x%256).getRGB()));
+            }
+        }
+        //BLUE-GREEN
+        for (int x = 1024; x < 1280; x++){
+            for (int y = 0; y < bImage.getHeight(); y++){
+                bImage.setRGB(x, y, (new Color(0, 255-(x%256) ,255).getRGB()));
+            }
+        }
+        //GREEN
+        for (int x = 1280; x < 1536; x++){
+            for (int y = 0; y < bImage.getHeight(); y++){
+                bImage.setRGB(x, y, (new Color(0, 0 ,255-(x%256)).getRGB()));
             }
         }
         return bImage;

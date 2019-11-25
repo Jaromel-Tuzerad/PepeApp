@@ -16,6 +16,7 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, 800, 700));
         primaryStage.setMinWidth(800);
         primaryStage.setMinHeight(700);
+        primaryStage.setTitle("PepeApp");
         primaryStage.show();
     }
 

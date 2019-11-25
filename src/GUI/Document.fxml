@@ -56,14 +56,14 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Button alignment="CENTER" minWidth="150.0" mnemonicParsing="false" text="Edit Matrix" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-                <Button alignment="CENTER" minWidth="150.0" mnemonicParsing="false" text="Select Image File" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                <Button alignment="CENTER" contentDisplay="CENTER" minWidth="150.0" mnemonicParsing="false" text="Apply  Matrix Filter" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
-                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="196.0" text="Generate Image" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
-                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="196.0" text="Restore Original Image" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER" />
-                <RadioButton disable="true" mnemonicParsing="false" text="Original Image" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER" />
-                <RadioButton disable="true" mnemonicParsing="false" selected="true" text="Modified Image" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="CENTER" />
-            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="3" />
+                <Button fx:id="buttonEditMatrix" alignment="CENTER" minWidth="150.0" mnemonicParsing="false" text="Edit Matrix" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                <Button fx:id="buttonSelectImageFile" alignment="CENTER" minWidth="150.0" mnemonicParsing="false" onAction="#loadImage" text="Select Image File" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                <Button fx:id="buttonApplyMatrixFilter" alignment="CENTER" contentDisplay="CENTER" disable="true" minWidth="150.0" mnemonicParsing="false" text="Apply  Matrix Filter" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+                <Button fx:id="buttonGenerateImage" alignment="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="196.0" text="Generate Image" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+                <Button fx:id="buttonRestoreOriginalImage" alignment="CENTER" disable="true" mnemonicParsing="false" prefHeight="50.0" prefWidth="196.0" text="Restore Original Image" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER" />
+                <RadioButton fx:id="radioButtonOriginalImage" disable="true" mnemonicParsing="false" text="Original Image" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER" />
+                <RadioButton fx:id="radioButtonModifiedImage" disable="true" mnemonicParsing="false" selected="true" text="Modified Image" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="CENTER" />
+            <ImageView disable="true" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="3" />
             </children>
         </GridPane>
         <ImageView fx:id="picture" fitHeight="458.0" fitWidth="431.0" layoutX="22.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="40.0" />

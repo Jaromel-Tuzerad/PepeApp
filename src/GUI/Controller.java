@@ -1,8 +1,13 @@
 package GUI;
 
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
@@ -50,6 +55,10 @@ public class Controller implements Initializable {
         System.exit(0);
     }
 
+    public void exitAbout(ActionEvent event) {
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+    }
+
     @FXML
     public void enableButtons() {
         buttonApplyMatrixFilter.setDisable(false);
@@ -61,7 +70,7 @@ public class Controller implements Initializable {
         }
     }
 
-    @FXML
+    /*@FXML
     public void disableButtons() {
         buttonApplyMatrixFilter.setDisable(true);
         buttonRestoreOriginalImage.setDisable(true);
@@ -71,6 +80,7 @@ public class Controller implements Initializable {
             item.setDisable(true);
         }
     }
+    */
 
     @FXML
     public void loadImage() throws Exception {
@@ -79,10 +89,33 @@ public class Controller implements Initializable {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("All Images", "*.jpeg", "*.jpg", "*.png");
         fileChooser.setSelectedExtensionFilter(extFilter);
         File file = fileChooser.showOpenDialog(new Stage());
-        Image image = new Image(new FileInputStream(file));
-        picture.setImage(image);
-        miniPicture.setImage(image);
-        enableButtons();
+
+        if(file != null) {
+            try {
+                Image image = new Image(new FileInputStream(file));
+                picture.setImage(image);
+                miniPicture.setImage(image);
+                enableButtons();
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    public void about(ActionEvent event) {
+        Parent root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("About.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Prasák");
+            stage.setScene(new Scene(root, 450, 450));
+            stage.show();
+            // Hide this current window (if this is what you want)
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -110,10 +143,12 @@ public class Controller implements Initializable {
         miniPicture.setImage(pic);
     }
 
+    /*
     public int randomInt(int min, int max) {
         Random r = new Random();
         return r.nextInt((max - min) + 1) + min;
     }
+     */
 
     public BufferedImage makeColoredImage() {
         BufferedImage bImage = new BufferedImage(1536, 1000, BufferedImage.TYPE_3BYTE_BGR);
@@ -157,9 +192,13 @@ public class Controller implements Initializable {
     }
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ToggleGroup tg = new ToggleGroup();
-        radioButtonModifiedImage.setToggleGroup(tg);
-        radioButtonOriginalImage.setToggleGroup(tg);
+        try {
+            ToggleGroup tg = new ToggleGroup();
+            radioButtonModifiedImage.setToggleGroup(tg);
+            radioButtonOriginalImage.setToggleGroup(tg);
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 

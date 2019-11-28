@@ -29,7 +29,7 @@
                 </Menu>
                 <Menu fx:id="menuAbout" mnemonicParsing="false" text="About">
                     <items>
-                        <MenuItem fx:id="menuAboutItem" mnemonicParsing="false" text="About" />
+                        <MenuItem fx:id="menuAboutItem" mnemonicParsing="false" onAction="#about" text="About" />
                     </items>
                 </Menu>
                 <Menu fx:id="menuExit" mnemonicParsing="false" text="Exit">
@@ -68,6 +68,6 @@
             <Canvas height="118.0" width="202.0" GridPane.rowIndex="5" />
             </children>
         </GridPane>
-        <ImageView fx:id="picture" fitHeight="458.0" fitWidth="431.0" layoutX="22.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="40.0" />
+        <ImageView fx:id="picture" fitHeight="460.0" fitWidth="430.0" layoutX="22.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="40.0" />
     </children>
 </AnchorPane>

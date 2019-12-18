@@ -47,8 +47,13 @@ public class Controller implements Initializable {
     private Menu menuFilters;
     @FXML
     private ImageView miniPicture;
+    @FXML
+    private ImageView pictureTom;
 
     final FileChooser fileChooser = new FileChooser();
+    
+    private BufferedImage savedImage;
+    private BufferedImage filteredImage;
 
     @FXML
     public void exit() {
@@ -96,10 +101,12 @@ public class Controller implements Initializable {
                 picture.setImage(image);
                 miniPicture.setImage(image);
                 enableButtons();
+                savedImage = SwingFXUtils.fromFXImage(image, null);
             } catch(Exception e) {
                 System.out.println(e.getMessage());
             }
         }
+
     }
 
     @FXML
@@ -111,7 +118,6 @@ public class Controller implements Initializable {
             stage.setTitle("Prasák");
             stage.setScene(new Scene(root, 450, 450));
             stage.show();
-            // Hide this current window (if this is what you want)
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -141,14 +147,8 @@ public class Controller implements Initializable {
         Image pic = SwingFXUtils.toFXImage(bi, null );
         picture.setImage(pic);
         miniPicture.setImage(pic);
+        savedImage = SwingFXUtils.fromFXImage(pic, null);
     }
-
-    /*
-    public int randomInt(int min, int max) {
-        Random r = new Random();
-        return r.nextInt((max - min) + 1) + min;
-    }
-     */
 
     public BufferedImage makeColoredImage() {
         BufferedImage bImage = new BufferedImage(1536, 1000, BufferedImage.TYPE_3BYTE_BGR);
@@ -189,6 +189,37 @@ public class Controller implements Initializable {
             }
         }
         return bImage;
+    }
+
+    @FXML
+    public void applyFilter() throws FilterException{
+        try {
+            filteredImage = new BufferedImage(savedImage.getWidth(), savedImage.getHeight(), savedImage.getType());
+            for (int x = 0; x < savedImage.getWidth(); x++){
+                for (int y = 0; y < savedImage.getHeight(); y++){
+                    int rgbOrig = savedImage.getRGB(x, y);
+                    Color c = new Color(rgbOrig);
+                    int r = 255 - c.getRed();
+                    int g = 255 - c.getGreen();
+                    int b = 255 - c.getBlue();
+                    Color nc = new Color(r,g,b);
+                    filteredImage.setRGB(x,y,nc.getRGB());
+                }
+            }
+            picture.setImage(SwingFXUtils.toFXImage(filteredImage, null ));
+        } catch (Exception e){
+            throw new FilterException(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void showFilteredImage() {
+        picture.setImage(SwingFXUtils.toFXImage(filteredImage, null));
+    }
+
+    @FXML
+    public void showOriginalImage() {
+        picture.setImage(SwingFXUtils.toFXImage(savedImage, null));
     }
 
     public void initialize(URL url, ResourceBundle resourceBundle) {

@@ -22,9 +22,10 @@
                   <MenuItem mnemonicParsing="false" onAction="#saveImage" text="Save" />
                     </items>
                 </Menu>
-                <Menu fx:id="menuFilters" mnemonicParsing="false" text="Filters">
+                <Menu fx:id="menuFilters" disable="true" mnemonicParsing="false" text="Filters">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#applyFilter" text="Negative" />
+                        <MenuItem fx:id="menuItemFilterNegative" disable="true" mnemonicParsing="false" onAction="#applyNegativeFilter" text="Negative" />
+                  <MenuItem fx:id="menuItemFilterBandW" disable="true" mnemonicParsing="false" onAction="#openPercentageSelector" text="Black&amp;White" />
                     </items>
                 </Menu>
                 <Menu fx:id="menuAbout" mnemonicParsing="false" text="About">
@@ -63,11 +64,11 @@
                 <Button fx:id="buttonGenerateImage" alignment="CENTER" mnemonicParsing="false" onAction="#generateImage" prefHeight="50.0" prefWidth="196.0" text="Generate Image" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
                 <Button fx:id="buttonRestoreOriginalImage" alignment="CENTER" disable="true" mnemonicParsing="false" onAction="#showOriginalImage" prefHeight="50.0" prefWidth="196.0" text="Restore Original Image" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER" />
                 <RadioButton fx:id="radioButtonOriginalImage" disable="true" mnemonicParsing="false" onAction="#showOriginalImage" text="Original Image" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER" />
-                <RadioButton fx:id="radioButtonModifiedImage" disable="true" mnemonicParsing="false" onAction="#showFilteredImage" selected="true" text="Modified Image" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="CENTER" />
-            <ImageView fx:id="miniPicture" disable="true" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="3" />
+                <RadioButton fx:id="radioButtonModifiedImage" disable="true" mnemonicParsing="false" onAction="#showModifiedImage" selected="true" text="Modified Image" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="CENTER" />
+            <ImageView fx:id="imageViewMiniPicture" disable="true" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="3" />
             <Canvas height="118.0" width="202.0" GridPane.rowIndex="5" />
             </children>
         </GridPane>
-        <ImageView fx:id="picture" fitHeight="460.0" fitWidth="430.0" layoutX="22.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="40.0" />
+        <ImageView fx:id="imageViewPicture" fitHeight="460.0" fitWidth="430.0" layoutX="22.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="40.0" />
     </children>
 </AnchorPane>

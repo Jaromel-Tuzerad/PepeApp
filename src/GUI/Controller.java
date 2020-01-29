@@ -22,13 +22,12 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
-import java.util.Random;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
     @FXML
-    private ImageView picture;
+    public ImageView imageViewPicture;
     @FXML
     private Button buttonSelectImageFile;
     @FXML
@@ -45,15 +44,14 @@ public class Controller implements Initializable {
     private RadioButton radioButtonModifiedImage;
     @FXML
     private Menu menuFilters;
-    @FXML
-    private ImageView miniPicture;
+
     @FXML
     private ImageView pictureTom;
 
     final FileChooser fileChooser = new FileChooser();
     
-    private BufferedImage savedImage;
-    private BufferedImage filteredImage;
+    public static BufferedImage currentImage;
+    public static BufferedImage previousImage;
 
     @FXML
     public void exit() {
@@ -70,6 +68,7 @@ public class Controller implements Initializable {
         buttonRestoreOriginalImage.setDisable(false);
         radioButtonOriginalImage.setDisable(false);
         radioButtonModifiedImage.setDisable(false);
+        menuFilters.setDisable(false);
         for (MenuItem item : menuFilters.getItems()) {
             item.setDisable(false);
         }
@@ -94,19 +93,15 @@ public class Controller implements Initializable {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("All Images", "*.jpeg", "*.jpg", "*.png");
         fileChooser.setSelectedExtensionFilter(extFilter);
         File file = fileChooser.showOpenDialog(new Stage());
-
         if(file != null) {
             try {
                 Image image = new Image(new FileInputStream(file));
-                picture.setImage(image);
-                miniPicture.setImage(image);
-                enableButtons();
-                savedImage = SwingFXUtils.fromFXImage(image, null);
+                setCurrentImage(SwingFXUtils.fromFXImage(image, null));
             } catch(Exception e) {
                 System.out.println(e.getMessage());
             }
         }
-
+        enableButtons();
     }
 
     @FXML
@@ -130,7 +125,7 @@ public class Controller implements Initializable {
         fileChooser.setTitle("Save Image");
         //FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("All Images", "*.jpg", "*.png");
         //fileChooser.setSelectedExtensionFilter(extFilter);
-        Image image = picture.getImage();
+        Image image = imageViewPicture.getImage();
         File file = fileChooser.showSaveDialog(new Stage());
         if (file != null) {
             try {
@@ -143,83 +138,120 @@ public class Controller implements Initializable {
 
     @FXML
     private void generateImage() {
-        BufferedImage bi = makeColoredImage();
-        Image pic = SwingFXUtils.toFXImage(bi, null );
-        picture.setImage(pic);
-        miniPicture.setImage(pic);
-        savedImage = SwingFXUtils.fromFXImage(pic, null);
+        if(currentImage != null) {
+            radioButtonModifiedImage.setSelected(true);
+        } else {
+            radioButtonOriginalImage.setSelected(true);
+        }
+        enableButtons();
+        setCurrentImage(makeColoredImage());
     }
 
     public BufferedImage makeColoredImage() {
-        BufferedImage bImage = new BufferedImage(1536, 1000, BufferedImage.TYPE_3BYTE_BGR);
-        //RED
+        BufferedImage newImage = new BufferedImage(1536, 1000, BufferedImage.TYPE_3BYTE_BGR);
+        //BLACK-RED
         for (int x = 0; x < 256; x++){
-            for (int y = 0; y < bImage.getHeight(); y++){
-                bImage.setRGB(x, y, (new Color(x%256, 0 , 0).getRGB()));
+            for (int y = 0; y < newImage.getHeight(); y++){
+                newImage.setRGB(x, y, (new Color(x%256, 0 , 0).getRGB()));
             }
         }
         //RED-GREEN
         for (int x = 256; x < 512; x++){
-            for (int y = 0; y < bImage.getHeight(); y++){
-                bImage.setRGB(x, y, (new Color(255, x%256, 0).getRGB()));
+            for (int y = 0; y < newImage.getHeight(); y++){
+                newImage.setRGB(x, y, (new Color(255, x%256, 0).getRGB()));
             }
         }
         //GREEN-RED
         for (int x = 512; x < 768; x++){
-            for (int y = 0; y < bImage.getHeight(); y++){
-                bImage.setRGB(x, y, (new Color(255-(x%256), 255 ,0).getRGB()));
+            for (int y = 0; y < newImage.getHeight(); y++){
+                newImage.setRGB(x, y, (new Color(255-(x%256), 255 ,0).getRGB()));
             }
         }
         //GREEN-BLUE
         for (int x = 768; x < 1024; x++){
-            for (int y = 0; y < bImage.getHeight(); y++){
-                bImage.setRGB(x, y, (new Color(0, 255 ,x%256).getRGB()));
+            for (int y = 0; y < newImage.getHeight(); y++){
+                newImage.setRGB(x, y, (new Color(0, 255 ,x%256).getRGB()));
             }
         }
         //BLUE-GREEN
         for (int x = 1024; x < 1280; x++){
-            for (int y = 0; y < bImage.getHeight(); y++){
-                bImage.setRGB(x, y, (new Color(0, 255-(x%256) ,255).getRGB()));
+            for (int y = 0; y < newImage.getHeight(); y++){
+                newImage.setRGB(x, y, (new Color(0, 255-(x%256) ,255).getRGB()));
             }
         }
-        //GREEN
+        //GREEN-BLACK
         for (int x = 1280; x < 1536; x++){
-            for (int y = 0; y < bImage.getHeight(); y++){
-                bImage.setRGB(x, y, (new Color(0, 0 ,255-(x%256)).getRGB()));
+            for (int y = 0; y < newImage.getHeight(); y++){
+                newImage.setRGB(x, y, (new Color(0, 0 ,255-(x%256)).getRGB()));
             }
         }
-        return bImage;
+        return newImage;
     }
 
     @FXML
-    public void applyFilter() throws FilterException{
+    public void restoreOriginalImage() {
+        showOriginalImage();
+        radioButtonModifiedImage.setSelected(false);
+        radioButtonOriginalImage.setSelected(true);
+    }
+
+    @FXML
+    public void applyNegativeFilter() {
         try {
-            filteredImage = new BufferedImage(savedImage.getWidth(), savedImage.getHeight(), savedImage.getType());
-            for (int x = 0; x < savedImage.getWidth(); x++){
-                for (int y = 0; y < savedImage.getHeight(); y++){
-                    int rgbOrig = savedImage.getRGB(x, y);
-                    Color c = new Color(rgbOrig);
+            BufferedImage newImage = new BufferedImage(currentImage.getWidth(), currentImage.getHeight(), currentImage.getType());
+            for (int x = 0; x < currentImage.getWidth(); x++){
+                for (int y = 0; y < currentImage.getHeight(); y++) {
+                    Color c = new Color(currentImage.getRGB(x, y));
                     int r = 255 - c.getRed();
                     int g = 255 - c.getGreen();
                     int b = 255 - c.getBlue();
                     Color nc = new Color(r,g,b);
-                    filteredImage.setRGB(x,y,nc.getRGB());
+                    newImage.setRGB(x,y,nc.getRGB());
                 }
             }
-            picture.setImage(SwingFXUtils.toFXImage(filteredImage, null ));
+            setCurrentImage(newImage);
+            radioButtonModifiedImage.setSelected(true);
         } catch (Exception e){
-            throw new FilterException(e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
     @FXML
-    public void showFilteredImage() {
-        picture.setImage(SwingFXUtils.toFXImage(filteredImage, null));
+    public void openPercentageSelector() {
+        Parent root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("PercentSelect.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Percentage selector");
+            stage.setScene(new Scene(root, 523, 411));
+            stage.show();
+            stage.setOnHiding(e -> {
+                imageViewPicture.setImage(SwingFXUtils.toFXImage(currentImage, null));
+                enableButtons();
+            });
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setCurrentImage(BufferedImage newImage) {
+        previousImage = currentImage;
+        currentImage = newImage;
+        imageViewPicture.setImage(SwingFXUtils.toFXImage(newImage, null ));
+        if(previousImage != null) {
+            enableButtons();
+        }
+    }
+
+    @FXML
+    public void showModifiedImage() {
+        imageViewPicture.setImage(SwingFXUtils.toFXImage(currentImage, null));
     }
 
     @FXML
     public void showOriginalImage() {
-        picture.setImage(SwingFXUtils.toFXImage(savedImage, null));
+        imageViewPicture.setImage(SwingFXUtils.toFXImage(previousImage, null));
     }
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
